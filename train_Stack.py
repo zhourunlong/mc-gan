@@ -27,7 +27,7 @@ total_steps = 0
   
 epoch =int(opt.which_epoch1)
 epoch0 = epoch 
-print "starting propagating back to the first network with starting lr %s ..."%opt.lr
+print("starting propagating back to the first network with starting lr %s ..."%opt.lr)
 opt.lr = opt.lr
 opt.continue_train = False
 opt.use_dropout = True

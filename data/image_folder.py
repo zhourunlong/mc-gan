@@ -44,7 +44,7 @@ def default_loader(path):
 def font_transform(img,path, rgb_in):
     n_rgb = img.size()[0]
     target_size = img.size()[1]
-    D_ = img.size()[2]/target_size
+    D_ = img.size()[2]//target_size
     # warnings.warn("size, %s %s"%(img.size(),D_))
     if not rgb_in:
         img = torch.mean(img,dim=0) #only one of the RGB channels    
@@ -92,9 +92,9 @@ class ImageFolder(data.Dataset):
         path = self.imgs[index]
         img = self.loader(path)
         if self.transform is not None:
-			img = self.transform(img)
-			if (self.font_trans):
-				img = font_transform(img,path, self.rgb)
+            img = self.transform(img)
+            if (self.font_trans):
+                img = font_transform(img,path, self.rgb)
         if self.return_paths:
             return img, path
         else:

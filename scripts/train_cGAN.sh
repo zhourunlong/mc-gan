@@ -12,7 +12,7 @@
 #=====================================
 
 DATA=$1
-DATASET="../datasets/${DATA}/"
+DATASET="./datasets/${DATA}/"
 experiment_dir="GlyphNet_pretrain"
 MODEL=cGAN
 MODEL_G=resnet_6blocks
@@ -28,7 +28,7 @@ LOADSIZE=64
 LAM_A=100
 NITER=500
 NITERD=100
-BATCHSIZE=150
+BATCHSIZE=120
 CUDA_ID=0
 
 

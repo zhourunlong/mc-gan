@@ -12,7 +12,7 @@
 #=====================================
 
 DATA=$1
-DATASET="../datasets/${DATA}/"
+DATASET="./datasets/${DATA}/"
 experiment_dir="GlyphNet_pretrain"
 MODEL=cGAN
 MODEL_G=resnet_6blocks

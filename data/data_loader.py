@@ -28,9 +28,9 @@ def normalize_stack(input,val=0.5):
     #normalize an tensor with arbitrary number of channels:
     # each channel with mean=std=val
     val=0.5
-    len_ = input.size(1)
-    mean = (val,)*len_
-    std = (val,)*len_
+    len_ = input.size(0)
+    mean = [val,]*len_
+    std = [val,]*len_
     t_normal_stack = transforms.Compose([
         transforms.Normalize(mean,std)])
     return t_normal_stack(input)
@@ -152,15 +152,15 @@ class Data(object):
         else: 
             #randomly remove some of the glyphs in input
             if not self.dict:
-                blank_ind = np.repeat(np.random.permutation(A.size(1)/n_rgb)[0:int(self.blanks*A.size(1)/n_rgb)],n_rgb)
+                blank_ind = np.repeat(np.random.permutation(A.size(1)//n_rgb)[0:int(self.blanks*A.size(1)//n_rgb)],n_rgb)
             else:
                 file_name = map(lambda x:x.split("/")[-1],AB_paths)
                 if len(file_name)>1:
                     raise Exception('batch size should be 1')
                 file_name=file_name[0]
-                blank_ind = self.random_dict[file_name][0:int(self.blanks*A.size(1)/n_rgb)]
+                blank_ind = self.random_dict[file_name][0:int(self.blanks*A.size(1)//n_rgb)]
 
-            rgb_inds = np.tile(range(n_rgb),int(self.blanks*A.size(1)/n_rgb))
+            rgb_inds = np.tile(range(n_rgb),int(self.blanks*A.size(1)//n_rgb))
             blank_ind = blank_ind*n_rgb + rgb_inds
             AA = A.clone()
             AA.index_fill_(1,LongTensor(list(blank_ind)),1)
@@ -215,7 +215,7 @@ class PartialData(object):
         t_topil = transforms.Compose([
             transforms.ToPILImage()])
         t_scale = transforms.Compose([
-            transforms.Scale(self.loadSize),
+            transforms.Resize(self.loadSize),
             transforms.ToTensor(),
             transforms.Normalize((0.5, 0.5, 0.5),
                                  (0.5, 0.5, 0.5))])
@@ -257,7 +257,7 @@ class StackDataLoader(BaseDataLoader):
         BaseDataLoader.initialize(self, opt)
         transform = transforms.Compose([
             # TODO: Scale
-            transforms.Scale(opt.loadSize),
+            transforms.Resize(opt.loadSize),
             transforms.ToTensor(),
                                  ])
         dic_phase = {'train':'Train', 'test':'Test'}
@@ -341,7 +341,7 @@ class PartialDataLoader(BaseDataLoader):
         BaseDataLoader.initialize(self, opt)
         transform = transforms.Compose([
             # TODO: Scale
-            transforms.Scale(opt.loadSize),
+            transforms.Resize(opt.loadSize),
             transforms.ToTensor(),
 #             transforms.Normalize((0.5, 0.5, 0.5),
 #                                  (0.5, 0.5, 0.5))
@@ -421,12 +421,12 @@ class DataLoader(BaseDataLoader):
         self.fineSize = opt.fineSize
         transform = transforms.Compose([
             # TODO: Scale
-            transforms.Scale(opt.loadSize),
+            transforms.Resize(opt.loadSize),
             transforms.ToTensor(),
             transforms.Normalize((0.5, 0.5, 0.5),
                                  (0.5, 0.5, 0.5))])
         # Dataset A
-        dataset = ImageFolder(root=opt.dataroot + '/' + opt.phase,
+        dataset = ImageFolder(root=opt.dataroot + opt.phase + '/',
                               transform=transform, return_paths=True, font_trans=(not opt.flat), rgb=opt.rgb,
                                fineSize=opt.fineSize, loadSize=opt.loadSize) 
         data_loader = torch.utils.data.DataLoader(
