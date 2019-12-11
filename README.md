@@ -9,7 +9,7 @@ Multi-Content GAN for Few-Shot Font Style Transfer; [Samaneh Azadi](https://peop
 
 ## Prerequisites:
 - Linux or macOS
-- Python 2.7
+- **Python 3.7**
 - CPU or NVIDIA GPU + CUDA CuDNN
 
 ## Getting Started
